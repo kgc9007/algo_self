@@ -2,8 +2,6 @@
 
 package BOJ.no2477;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -12,6 +10,17 @@ public class Main {
 		
 		int K = sc.nextInt();
 		
+		int d = 0;
+		for (int i=0; i<K; i++) {
+			for (int j=0; j<K-1-d; j++) {
+				System.out.print(" ");
+			}
+			for (int j=K-1-d; j<=K-1+d; j++) {
+				System.out.print("*");
+			}
+			d++;
+			System.out.println();
+		}
 		
 		
 		
