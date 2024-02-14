@@ -5,6 +5,11 @@ package BOJ.no1012;
 import java.util.Scanner;
 
 public class Main {
+
+	static int[] dr = { -1, 1, 0, 0 };
+	static int[] dc = { 0, 0, -1, 1 };
+	static int[][] map;
+
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 
@@ -16,7 +21,7 @@ public class Main {
 			int N = sc.nextInt();
 			int K = sc.nextInt();
 
-			int[][] map = new int[N][M];
+			map = new int[N][M];
 
 			// K개의 배추의 위치 입력
 			while (K-- > 0) {
@@ -25,38 +30,32 @@ public class Main {
 				map[Y][X]++;
 			}
 
-			int[] dr = { -1, 1, 0, 0 };
-			int[] dc = { 0, 0, -1, 1 };
 			int count = 0;
 
 			for (int r = 0; r < N; r++) {
 				for (int c = 0; c < M; c++) {
 					if (map[r][c] == 1) {
 						map[r][c] = 2;
-						boolean flag = true;
-						for (int d = 0; d < 4; d++) {
-							int nr = r + dr[d];
-							int nc = c + dc[d];
-							while (nr >= 0 && nr < N && nc >= 0 && nc < M && map[nr][nc] != 0) {
-								if (map[nr][nc] == 2) {
-									flag = false;
-								}
-								if (map[nr][nc] == 1) {
-									map[nr][nc] = 2;
-								}
-								nr += dr[d];
-								nc += dc[d];
-							}
-						}
-						if (flag) {
-							count++;
-						}
+						check(r, c);
+						count++;
+
 					}
 				}
 			}
 
 			// 결과 출력
 			System.out.println(count);
+		}
+	}
+	
+	public static void check(int r, int c) {
+		for (int d = 0; d < 4; d++) {
+			int nr = r + dr[d];
+			int nc = c + dc[d];
+			if (nr >= 0 && nr < map.length && nc >= 0 && nc < map[0].length && map[nr][nc] == 1) {
+				map[nr][nc] = 2;
+				check(nr, nc);
+			}
 		}
 	}
 }
