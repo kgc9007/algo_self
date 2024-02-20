@@ -1,4 +1,5 @@
 // BOJ 1074번 Z
+// 실패 - 메모리 초과
 
 package BOJ.no1074;
 

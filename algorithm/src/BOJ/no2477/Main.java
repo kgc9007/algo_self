@@ -10,19 +10,34 @@ public class Main {
 		
 		int K = sc.nextInt();
 		
-		int d = 0;
-		for (int i=0; i<K; i++) {
-			for (int j=0; j<K-1-d; j++) {
-				System.out.print(" ");
+		int[][] coordinate = new int[6][2];
+		int x = 0;
+		int y = 0;
+		for (int i = 0; i < 6; i++) {
+			int d = sc.nextInt();
+			int length = sc.nextInt();
+			if (d == 1) {
+				x += length;
+				coordinate[i][0] = x;
+				coordinate[i][1] = y;
+			} else if (d == 2) {
+				x -= length;
+				coordinate[i][0] = x;
+				coordinate[i][1] = y;
+			} else if (d == 3) {
+				y -= length;
+				coordinate[i][0] = x;
+				coordinate[i][1] = y;
+			} else {
+				y += length;
+				coordinate[i][0] = x;
+				coordinate[i][1] = y;				
 			}
-			for (int j=K-1-d; j<=K-1+d; j++) {
-				System.out.print("*");
-			}
-			d++;
-			System.out.println();
 		}
 		
-		
+		for (int i = 0; i < 6; i++) {
+			System.out.printf("x : %d   y : %d%n", coordinate[i][0], coordinate[i][1]);
+		}
 		
 	}
 
