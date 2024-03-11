@@ -21,8 +21,8 @@ public class Main {
 			info[i][0] = sc.nextInt();
 			info[i][1] = sc.nextInt();
 		}
+
 		
-		int[] dp = new int[N];
 		for (int i = 0; i < N; i++) {
 
 		}
