@@ -11,9 +11,9 @@ public class Main {
 	static int[][] info;
 	static int teamSize;
 
-	//
+	// i번째 선수가 A팀에 속하는지를 저장할 배열 isTeamA
 	static boolean[] isTeamA;
-	
+
 	// 두 팀의 능력치 차이의 최소값
 	static int minDiff = Integer.MAX_VALUE;
 
@@ -31,21 +31,22 @@ public class Main {
 				info[r][c] = sc.nextInt();
 			}
 		}
-		
-		// 
+
+		// 팀 구분 초기화
 		isTeamA = new boolean[N];
 		
+		// 팀 나누기 실시
 		divideTeam(0, 0);
-		
+
 		// 결과 출력
 		System.out.println(minDiff);
 	}
-	
+
 	public static void divideTeam(int idx, int count) {
 		if (count == teamSize) {
 			int sumA = 0;
 			int sumB = 0;
-			
+
 			for (int i = 0; i < N; i++) {
 				for (int j = 0; j < N; j++) {
 					if (isTeamA[i] && isTeamA[j]) {
@@ -56,26 +57,20 @@ public class Main {
 					}
 				}
 			}
-			
+
 			minDiff = Math.min(minDiff, Math.abs(sumA - sumB));
 			return;
 		}
-		
-//		// 해당 선수가 A팀에 포함되는 경우
-//		isTeamA[idx] = true;
-//		divideTeam(idx + 1, count + 1);
-//		
-//		// 해당 선수가 A팀에 포함되지 않는 경우
-//		isTeamA[idx] = false;
-//		divideTeam(idx + 1, count);
-		
-        // 팀 구성
-        for (int i = idx; i < N; i++) {
-            if (!isTeamA[i]) {
-                isTeamA[i] = true; // 팀 A에 추가
-                divideTeam(i + 1, count + 1);
-                isTeamA[i] = false; // 팀 A에서 제거하고 팀 B에 추가
-            }
-        }
+		if (idx == N) {
+			return;
+		}
+
+		// 해당 선수가 A팀에 포함되는 경우
+		isTeamA[idx] = true;
+		divideTeam(idx + 1, count + 1);
+
+		// 해당 선수가 A팀에 포함되지 않는 경우
+		isTeamA[idx] = false;
+		divideTeam(idx + 1, count);
 	}
 }
