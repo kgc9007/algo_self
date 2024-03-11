@@ -39,23 +39,34 @@ public class Main {
 			}
 		}
 
-		// 
+		//
 		minDistance = Integer.MAX_VALUE;
-		
+
 		//
 		for (int r = 0; r < N; r++) {
 			for (int c = 0; c < M; c++) {
 				if (wall[r][c]) {
-					wall[r][c] = false;
-					bfs(new int[] { 0, 0 });
-					wall[r][c] = true;
+					boolean flag = false;
+					for (int d = 0; d < 4; d++) {
+						int nr = r + dr[d];
+						int nc = c + dc[d];
+						if (check(nr, nc) && !wall[nr][nc]) {
+							flag = true;
+							break;
+						}
+					}
+					if (flag) {
+						wall[r][c] = false;
+						bfs(new int[] { 0, 0 });
+						wall[r][c] = true;
+					}
 				}
 			}
 		}
-		
+
 		// 결과 출력
 		if (minDistance != Integer.MAX_VALUE) {
-			System.out.println(minDistance);			
+			System.out.println(minDistance);
 		} else {
 			System.out.println(-1);
 		}
@@ -64,9 +75,14 @@ public class Main {
 
 	// bfs
 	public static void bfs(int[] start) {
+		int[][] mapClone = new int[N][M];
+		for (int r = 0; r < N; r++) {
+			System.arraycopy(map[r], 0, mapClone[r], 0, M);
+		}
+
 		Queue<int[]> queue = new LinkedList<>();
 
-		map[start[0]][start[1]] = 1;
+		mapClone[start[0]][start[1]] = 1;
 		queue.add(start);
 		while (!queue.isEmpty()) {
 			int[] tmp = queue.poll();
@@ -78,15 +94,15 @@ public class Main {
 				int nr = r + dr[d];
 				int nc = c + dc[d];
 
-				if (check(nr, nc) && !wall[nr][nc] && map[nr][nc] == 0) {
-					map[nr][nc] = map[r][c] + 1;
+				if (check(nr, nc) && !wall[nr][nc] && mapClone[nr][nc] == 0) {
+					mapClone[nr][nc] = mapClone[r][c] + 1;
 					queue.add(new int[] { nr, nc });
 				}
 			}
 		}
-		
-		if (map[N - 1][M - 1] != 0) {
-			minDistance = Math.min(minDistance, map[N - 1][M - 1]);
+
+		if (mapClone[N - 1][M - 1] != 0) {
+			minDistance = Math.min(minDistance, mapClone[N - 1][M - 1]);
 		}
 
 	}
