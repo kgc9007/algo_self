@@ -34,17 +34,50 @@ public class Main {
 			}
 		});
 
+		
+		int[] startTime = new int[N];
+		int[] endTime = new int[N];
 		for (int i = 0; i < N; i++) {
-			System.out.printf("%d %d", info[i][0], info[i][1]);
-			System.out.println();
+			startTime[i] = info[i][0];
+			endTime[i] = info[i][1];
 		}
 
 		// 총 회의 진행 수 count
 		// count = 0으로 초기화
 		int count = 0;
+		int nowStartTime = 0;
+		int nowEndTime = 0;
+		int prevEndTime = 0;
 
 		for (int i = 0; i < N; i++) {
+			nowStartTime = startTime[i];
+			nowEndTime = endTime[i];
 
+			if (i == N - 2) {
+				if (nowEndTime <= startTime[i + 1]) {
+					count += 2;
+				} else {
+					count++;
+				}
+				break;
+			} else {
+				if (prevEndTime > nowStartTime) {
+					continue;
+				}
+				if (nowEndTime <= startTime[i + 1]) {
+					count++;
+					prevEndTime = nowEndTime;
+				} else {
+					if (nowEndTime > endTime[i + 1]) {
+						continue;
+					} else {
+						count++;
+						prevEndTime = nowEndTime;
+					}
+				}
+			}
 		}
+
+		System.out.println(count);
 	}
 }
