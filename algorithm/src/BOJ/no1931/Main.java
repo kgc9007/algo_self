@@ -22,8 +22,8 @@ public class Main {
 		}
 
 		// 정렬
-		// 1. 회의 시작이 빠른 순으로
-		// 2. 회의 시작 시간이 같다면 종료 시간이 빠른 순으로
+		// 1. 회의 종료가 빠른 순으로
+		// 2. 회의 종료 시간이 같다면 시작 시간이 빠른 순으로
 		Arrays.sort(time, new Comparator<int[]>() {
 			@Override
 			public int compare(int[] o1, int[] o2) {
