@@ -2,7 +2,9 @@
 
 package BOJ.no16234;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
@@ -73,10 +75,10 @@ public class Main {
 	// 연합 확인
 	// 인구이동이 발생하지 않으면 false 반환
 	public static boolean getUnion(int[] position) {
-		boolean[][] isUnion = new boolean[N][N];
-		isUnion[position[0]][position[1]] = true;
+		List<int[]> list = new ArrayList<>();
+		list.add(position);
+
 		int sum = map[position[0]][position[1]];
-		int count = 1;
 
 		queue = new LinkedList<>();
 		queue.add(position);
@@ -96,9 +98,10 @@ public class Main {
 				// 3. 인구수 차이가 국경을 열 수 있는 범위 안에 있으면
 				if (check(nr, nc) && !visited[nr][nc] && canOpen(r, c, nr, nc)) {
 					visited[nr][nc] = true;
-					isUnion[nr][nc] = true;
+
+					list.add(new int[] { nr, nc });
+
 					sum += map[nr][nc];
-					count++;
 
 					queue.add(new int[] { nr, nc });
 				}
@@ -106,20 +109,21 @@ public class Main {
 		}
 
 		// 인구 이동 실시
-		move(sum / count, isUnion);
+		if (list.size() != 1) {
+			move(sum / list.size(), list);
+		}
 
-		return count != 1;
+		return list.size() != 1;
 	}
 
 	// 인구 이동 메소드
 	// 서로 연합인 지역의 인구수를 모두 동일하게 변경
-	public static void move(int newPopulation, boolean[][] isUnion) {
-		for (int r = 0; r < N; r++) {
-			for (int c = 0; c < N; c++) {
-				if (isUnion[r][c]) {
-					map[r][c] = newPopulation;
-				}
-			}
+	public static void move(int newPopulation, List<int[]> unionList) {
+		for (int i = 0; i < unionList.size(); i++) {
+			int r = unionList.get(i)[0];
+			int c = unionList.get(i)[1];
+			
+			map[r][c] = newPopulation;
 		}
 	}
 
