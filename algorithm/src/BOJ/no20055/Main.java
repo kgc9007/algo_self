@@ -3,13 +3,17 @@
 
 package BOJ.no20055;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 	static int N;
 	static int K;
 	
-	static int[] belt;
+	static int[][] belt;
+	
+	static List<Integer> robot = new ArrayList<>();
 	
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
@@ -17,9 +21,17 @@ public class Main {
 		N = sc.nextInt();
 		K = sc.nextInt();
 		
-		belt = new int[2 * N + 1];
+		belt = new int[2 * N + 1][2];
 		for (int i = 1; i <= 2 * N; i++) {
-			belt[i] = sc.nextInt();
+			belt[i][0] = sc.nextInt();
+		}
+	}
+	
+	// 벨트 회전 메소드
+	public static void rotate() {
+		for (int i = belt.length - 1; i > 0; i--) {
+			belt[i][0] = belt[i-1][0];
+			belt[i][1] = belt[i-1][1];
 		}
 	}
 }
