@@ -21,17 +21,17 @@ public class Main {
 		/*
 		 * [게임판 정보 입력]
 		 * 
-		 * board[0] : 시작, board[32] : 도착, board[31] : 마지막 칸
+		 * board[0] : 시작, board[31] : 마지막 칸
 		 * 
-		 * board[1] ~ board[20] : 가장 크게 돌아가는 길
+		 * board[1] ~ board[19] : 가장 크게 돌아가는 길
 		 * 
-		 * board[5] -> board[21] ~ board[23] : 5번 칸에서 지름길로 이동
+		 * board[5] -> board[20] ~ board[22] : 5번 칸에서 지름길로 이동
 		 * 
-		 * board[10] -> board[24] ~ board[25] : 10번 칸에서 지름길로 이동
+		 * board[10] -> board[23] ~ board[24] : 10번 칸에서 지름길로 이동
 		 * 
-		 * board[15] -> board[26] ~ board[28] : 15번 칸에서 지름길로 이동
+		 * board[15] -> board[25] ~ board[27] : 15번 칸에서 지름길로 이동
 		 * 
-		 * board[29] ~ board[31] : 중앙 ~ 마지막 지점(board[20]) 전까지
+		 * board[28] ~ board[31] : 중앙 ~ 마지막 지점까지
 		 * 
 		 */
 		for (int i = 1; i < 20; i++) {
@@ -46,22 +46,24 @@ public class Main {
 		for (int i = 1; i <= 3; i++) {
 			board[24 + i][0] = 29 - i;
 		}
-		for (int i = 1; i <= 3; i++) {
+		for (int i = 1; i <= 4; i++) {
 			board[27 + i][0] = 20 + 5 * i;
 		}
 
+		// 앞으로 나올 주사위 정보 입력
 		for (int i = 0; i < 10; i++) {
 			dice[i] = sc.nextInt();
 		}
-
+		
 		// 최대 점수 계산
 		getMaxScore(0);
 
 		// 결과 출력
 		System.out.println(maxScore);
-		
+
 	}
 
+	// 조합(순열)을 이용한 최대점수 계산
 	public static void getMaxScore(int idx) {
 		if (idx == 10) {
 			players = new int[4];
@@ -74,30 +76,15 @@ public class Main {
 			return;
 		}
 
-		// 0번 말 이동 선택
-		selected[idx] = 0;
-		getMaxScore(idx + 1);
-
-		// 1번 말 이동 선택
-		selected[idx] = 1;
-		getMaxScore(idx + 1);
-
-		// 2번 말 이동 선택
-		selected[idx] = 2;
-		getMaxScore(idx + 1);
-
-		// 3번 말 이동 선택
-		selected[idx] = 3;
-		getMaxScore(idx + 1);
-
-//		// 4개의 말에 대해 각각 이동 가능한 경우를 모두 고려
-//		for (int player = 0; player < 4; player++) {
-//			selected[idx] = player;
-//			getMaxScore(idx + 1);
-//		}
+		// 4개의 말에 대해 각각 이동 가능한 경우를 모두 고려
+		for (int player = 0; player < 4; player++) {
+			selected[idx] = player;
+			getMaxScore(idx + 1);
+		}
 
 	}
 
+	// 선택된 순서로 말을 이동 시 얻을 수 있는 점수 계산
 	public static int getScore() {
 		int sum = 0;
 		for (int i = 0; i < 10; i++) {
@@ -110,6 +97,9 @@ public class Main {
 		return sum;
 	}
 
+	// 말 이동 함수
+	// 이동할 수 없으면 -1 반환
+	// 이동할 수 있으면 해당 위치로 이동, 도착한 칸의 점수 반환
 	public static int move(int player, int distance) {
 		if (out[player]) {
 			return -1;
@@ -120,7 +110,7 @@ public class Main {
 		int next = 0;
 
 		// 말의 현재 위치 표시 지우기
-		board[now][1] = 0;
+		board[now][1] = -1;
 
 		// 1. 말이 갈림길에 있는 경우
 		// 1-1. 5번 칸(점수 10점 위치)
@@ -172,8 +162,8 @@ public class Main {
 			next = 32;
 		}
 		// 5. 이외의 자리 (가장 큰 둘레를 이동하는 경우)
-		// 5-1. 마지막 칸이나 밖으로 이동하는 경우
 		else {
+			// 5-1. 마지막 칸이나 밖으로 이동하는 경우
 			if (now + distance > 19) {
 				if (now + distance == 20) {
 					next = 31;
