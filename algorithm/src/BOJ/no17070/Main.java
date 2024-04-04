@@ -6,7 +6,6 @@ package BOJ.no17070;
 import java.util.Scanner;
 
 public class Main {
-
 	// 새 집의 크기 N, 새 집의 정보를 나타낼 배열 map
 	static int N;
 	static int[][] map;

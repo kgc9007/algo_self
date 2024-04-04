@@ -25,6 +25,7 @@ public class Main {
 	// 얻을 수 있는 최대 점수
 	static int maxScore = 0;
 
+	// 타순별로 얻을 수 있는 점수
 	static int score;
 
 	public static void main(String[] args) {
