@@ -15,10 +15,11 @@ public class Main {
 	static int[] result;
 
 	static StringBuilder sb = new StringBuilder();
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		
+
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 
@@ -28,24 +29,24 @@ public class Main {
 		}
 
 		result = new int[M];
-		getPermutation(0);
+		getCombination(0, 0);
 		System.out.println(sb);
 
 	}
 
-	// 중복 순열 구하기
-	public static void getPermutation(int idx) {
-		if (idx == M) {
+	// 중복 조합 구하기
+	public static void getCombination(int idx, int count) {
+		if (count == M) {
 			for (int i = 0; i < M; i++) {
-				sb.append(result[i] + " ");
+				System.out.print(result[i] + " ");
 			}
-			sb.append("\n");
+			System.out.println();
 			return;
 		}
 
-		for (int i = 0; i < N; i++) {
-			result[idx] = arr[i];
-			getPermutation(idx + 1);
+		for (int i = idx; i < N; i++) {
+			result[count] = arr[i];
+			getCombination(i, count + 1);
 		}
 	}
 }
