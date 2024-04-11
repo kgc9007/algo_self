@@ -1,4 +1,5 @@
-// BOJ 2293번 동전
+// BOJ 2293번 동전 1
+// https://www.acmicpc.net/problem/2293
 
 package BOJ.no2293;
 
@@ -19,8 +20,10 @@ public class Main {
 			coin[i] = sc.nextInt();
 		}
 
-		Arrays.sort(coin);
-
+		int[][] dp = new int[N + 1][K + 1];
+		for (int i = 0; i <= N; i++) {
+			dp[i][0] = 1;
+		}
 
 	}
 }
