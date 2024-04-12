@@ -46,10 +46,11 @@ public class Main {
 		// 지도 정보 입력
 		map = new int[N + 1][M + 1];
 		for (int r = 1; r <= N; r++) {
-			for (int c = 1; c <= N; c++) {
+			for (int c = 1; c <= M; c++) {
 				map[r][c] = sc.nextInt();
 			}
 		}
+
 		// 주사위의 현재 상태 입력(초기상태)
 		dice = new int[7];
 		for (int i = 1; i < 7; i++) {
@@ -62,6 +63,7 @@ public class Main {
 		// 주사위 이동 방향 D를 1(동쪽)로 초기화
 		D = 1;
 
+		// K번 이동
 		while (K-- > 0) {
 			move();
 		}
@@ -73,35 +75,40 @@ public class Main {
 
 	// 주사위 이동
 	public static void move() {
+		// 주사위의 현재 위치
 		int r = now[0];
 		int c = now[1];
 
+		// 현재 주사위가 향한 방향으로 한 칸 이동
 		int nr = r + dr[D];
 		int nc = c + dc[D];
 
+		// 경계를 벗어난 경우 방향을 반대로 돌려 원래 자리에서 한 칸 이동
 		if (!check(nr, nc)) {
 			D = (D + 2) % 4;
 			nr = r + dr[D];
 			nc = c + dc[D];
 		}
 
+		// visited 배열 초기화 후 dfs 실시
+		// -> 이동한 칸과 같은 값으로 이어진 구역의 수(count) 계산
 		visited = new boolean[N + 1][M + 1];
 		visited[nr][nc] = true;
 		count = 1;
 		dfs(nr, nc);
 
+		// 점수 추가
 		score += map[nr][nc] * count;
-		System.out.println("count : " + count);
-		System.out.println("score : " + score);
 
+		// 주사위의 현재 위치, 상태(주사위가 보고있는 방향) 변경
 		now[0] = nr;
 		now[1] = nc;
 		roll(D);
 
 		// 주사위를 굴린 후 방향 조정
-		if (dice[1] > map[now[0]][now[1]]) {
+		if (dice[6] > map[now[0]][now[1]]) {
 			D = (D + 1) % 4;
-		} else if (dice[1] < map[now[0]][now[1]]) {
+		} else if (dice[6] < map[now[0]][now[1]]) {
 			D = (D + 3) % 4;
 		}
 	}
@@ -110,24 +117,28 @@ public class Main {
 	public static void roll(int d) {
 		int[] copy = Arrays.copyOf(dice, dice.length);
 		switch (d) {
+		// 위로(북쪽으로) 굴린 경우
 		case 0:
 			dice[2] = copy[1];
 			dice[1] = copy[5];
 			dice[5] = copy[6];
 			dice[6] = copy[2];
 			break;
+		// 오른쪽으로(동쪽으로) 굴린 경우
 		case 1:
 			dice[3] = copy[1];
 			dice[1] = copy[4];
 			dice[4] = copy[6];
 			dice[6] = copy[3];
 			break;
+		// 아래쪽으로(남쪽으로) 굴린 경우
 		case 2:
 			dice[6] = copy[5];
 			dice[5] = copy[1];
 			dice[1] = copy[2];
 			dice[2] = copy[6];
 			break;
+		// 왼쪽으로(서쪽으로) 굴린 경우
 		case 3:
 			dice[4] = copy[1];
 			dice[1] = copy[3];
