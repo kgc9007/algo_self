@@ -11,100 +11,102 @@ public class Main {
 	static int[] dr = { -1, 1, 0, 0 };
 	static int[] dc = { 0, 0, -1, 1 };
 
+	// 맵의 크기 N, M
 	static int N;
 	static int M;
 	static int[][] map;
-	static boolean[][] wall;
 
-	static int minDistance;
+	static int[][][] visited;
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 
-		//
+		// N, M 입력
 		N = sc.nextInt();
 		M = sc.nextInt();
 
-		//
+		// 맵 생성
 		map = new int[N][M];
-		wall = new boolean[N][M];
 
-		//
+		// 맵 정보 입력
 		for (int r = 0; r < N; r++) {
 			String line = sc.next();
 			for (int c = 0; c < M; c++) {
-				if (line.charAt(c) == '1') {
-					wall[r][c] = true;
-				}
+				map[r][c] = line.charAt(c) - '0';
 			}
 		}
 
-		//
-		minDistance = Integer.MAX_VALUE;
+		// 방문배열 초기화 후 bfs 실시
+		visited = new int[N][M][2];
 
-		//
-		for (int r = 0; r < N; r++) {
-			for (int c = 0; c < M; c++) {
-				if (wall[r][c]) {
-					boolean flag = false;
-					for (int d = 0; d < 4; d++) {
-						int nr = r + dr[d];
-						int nc = c + dc[d];
-						if (check(nr, nc) && !wall[nr][nc]) {
-							flag = true;
-							break;
-						}
-					}
-					if (flag) {
-						wall[r][c] = false;
-						bfs(new int[] { 0, 0 });
-						wall[r][c] = true;
-					}
-				}
-			}
-		}
+		bfs(new int[] { 0, 0, 0 });
 
 		// 결과 출력
-		if (minDistance != Integer.MAX_VALUE) {
-			System.out.println(minDistance);
-		} else {
+		// 불가능할 때는 -1 출력, 가능하면 최단 거리 출력
+		if (visited[N - 1][M - 1][0] == 0 && visited[N - 1][M - 1][1] == 0) {
 			System.out.println(-1);
+		} else {
+			// 벽을 부수고 가는 경우만 가능하거나
+			// 벽을 안 부수고 가는 경우만 가능하면
+			// 가능한 경우가 최단거리
+			if (visited[N - 1][M - 1][0] == 0) {
+				System.out.println(visited[N - 1][M - 1][1]);
+			} else if (visited[N - 1][M - 1][1] == 0) {
+				System.out.println(visited[N - 1][M - 1][0]);
+			}
+			// 둘 다 가능하면 더 빠른 결과 출력
+			else {
+				int min = Math.min(visited[N - 1][M - 1][0], visited[N - 1][M - 1][1]);
+				System.out.println(min);
+			}
 		}
-
 	}
 
 	// bfs
 	public static void bfs(int[] start) {
-		int[][] mapClone = new int[N][M];
-		for (int r = 0; r < N; r++) {
-			System.arraycopy(map[r], 0, mapClone[r], 0, M);
-		}
-
 		Queue<int[]> queue = new LinkedList<>();
-
-		mapClone[start[0]][start[1]] = 1;
 		queue.add(start);
-		while (!queue.isEmpty()) {
-			int[] tmp = queue.poll();
+		// 0, 0에서 벽을 부수지 않고 시작
+		visited[0][0][0] = 1;
 
-			int r = tmp[0];
-			int c = tmp[1];
+		while (!queue.isEmpty()) {
+			int[] curr = queue.poll();
+			int r = curr[0];
+			int c = curr[1];
+			int broken = curr[2]; // 벽을 부순적이 없다면 0, 있다면 1
 
 			for (int d = 0; d < 4; d++) {
 				int nr = r + dr[d];
 				int nc = c + dc[d];
 
-				if (check(nr, nc) && !wall[nr][nc] && mapClone[nr][nc] == 0) {
-					mapClone[nr][nc] = mapClone[r][c] + 1;
-					queue.add(new int[] { nr, nc });
+				// 경계를 벗어나면 진행 X
+				if (!check(nr, nc)) {
+					continue;
+				}
+
+				// 벽을 부수지 않고 온 경우
+				if (broken == 0) {
+					// 다음 칸이 벽이 아니고 아직 방문하지 X
+					if (map[nr][nc] == 0 && visited[nr][nc][0] == 0) {
+						visited[nr][nc][0] = visited[r][c][0] + 1;
+						queue.add(new int[] { nr, nc, 0 });
+					}
+					// 다음 칸이 벽이고 아직 벽을 부수고 해당 칸에 방문하지 X
+					if (map[nr][nc] == 1 && visited[nr][nc][1] == 0) {
+						visited[nr][nc][1] = visited[r][c][0] + 1;
+						queue.add(new int[] { nr, nc, 1 });
+					}
+				}
+				// 벽을 부수고 온 경우
+				else {
+					// 다음 칸이 벽이 아니고 아직 방문하지 X
+					if (map[nr][nc] == 0 && visited[nr][nc][1] == 0) {
+						visited[nr][nc][1] = visited[r][c][1] + 1;
+						queue.add(new int[] { nr, nc, 1 });
+					}
 				}
 			}
 		}
-
-		if (mapClone[N - 1][M - 1] != 0) {
-			minDistance = Math.min(minDistance, mapClone[N - 1][M - 1]);
-		}
-
 	}
 
 	// 경계를 벗어났는지 확인하는 메소드
