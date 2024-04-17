@@ -39,6 +39,7 @@ public class Main {
 
 		// 결과 출력
 		System.out.println(start - end);
+		
 	}
 
 	// 토네이도 발생
@@ -46,7 +47,11 @@ public class Main {
 		// 가운데에서 시작
 		// 반시계방향으로 회전하며 점점 커지는 모양
 		/*
-		 * 25 24 23 22 21 10 9 8 7 20 11 2 1 6 19 12 3 4 5 18 13 14 15 16 17
+		 * 25 24 23 22 21 
+		 * 10 9  8  7 20 
+		 * 11 2  1  6 19 
+		 * 12 3  4  5 18 
+		 * 13 14 15 16 17
 		 * 
 		 */
 		int r = N / 2 + 1;
@@ -91,56 +96,56 @@ public class Main {
 		if (check(nextr + dr[d] * 2, nextc + dc[d] * 2)) {
 			int moveSand = (sand * 5) / 100;
 			map[nextr + dr[d] * 2][nextc + dc[d] * 2] += moveSand;
-			remain -= moveSand;
 		}
+		remain -= (sand * 5) / 100;
 
 		// 7% 이동 (이동방향 좌, 우로 1칸)
 		if (check(nextr + dr[(d + 1) % 4], nextc + dc[(d + 1) % 4])) {
 			int moveSand = (sand * 7) / 100;
 			map[nextr + dr[(d + 1) % 4]][nextc + dc[(d + 1) % 4]] += moveSand;
-			remain -= moveSand;
 		}
+		remain -= (sand * 7) / 100;
 		if (check(nextr - dr[(d + 1) % 4], nextc - dc[(d + 1) % 4])) {
 			int moveSand = (sand * 7) / 100;
 			map[nextr - dr[(d + 1) % 4]][nextc - dc[(d + 1) % 4]] += moveSand;
-			remain -= moveSand;
 		}
+		remain -= (sand * 7) / 100;
 
 		// 2% 이동 (이동방향 좌, 우로 2칸)
 		if (check(nextr + dr[(d + 1) % 4] * 2, nextc + dc[(d + 1) % 4] * 2)) {
 			int moveSand = (sand * 2) / 100;
 			map[nextr + dr[(d + 1) % 4] * 2][nextc + dc[(d + 1) % 4] * 2] += moveSand;
-			remain -= moveSand;
 		}
+		remain -= (sand * 2) / 100;
 		if (check(nextr - dr[(d + 1) % 4] * 2, nextc - dc[(d + 1) % 4] * 2)) {
 			int moveSand = (sand * 2) / 100;
 			map[nextr - dr[(d + 1) % 4] * 2][nextc - dc[(d + 1) % 4] * 2] += moveSand;
-			remain -= moveSand;
 		}
+		remain -= (sand * 2) / 100;
 
 		// 10% 이동 (이동방향으로 1칸, 이동방향 좌, 우로 한칸)
 		if (check(frontr + dr[(d + 1) % 4], frontc + dc[(d + 1) % 4])) {
 			int moveSand = sand / 10;
 			map[frontr + dr[(d + 1) % 4]][frontc + dc[(d + 1) % 4]] += moveSand;
-			remain -= moveSand;
 		}
+		remain -= (sand * 10) / 100;
 		if (check(frontr - dr[(d + 1) % 4], frontc - dc[(d + 1) % 4])) {
 			int moveSand = sand / 10;
 			map[frontr - dr[(d + 1) % 4]][frontc - dc[(d + 1) % 4]] += moveSand;
-			remain -= moveSand;
 		}
+		remain -= (sand * 10) / 100;
 
 		// 1% 이동 (이동 전 위치에서 좌, 우로 한칸)
 		if (check(prevr + dr[(d + 1) % 4], prevc + dc[(d + 1) % 4])) {
 			int moveSand = sand / 100;
 			map[prevr + dr[(d + 1) % 4]][prevc + dc[(d + 1) % 4]] += moveSand;
-			remain -= moveSand;
 		}
+		remain -= sand / 100;
 		if (check(prevr - dr[(d + 1) % 4], prevc - dc[(d + 1) % 4])) {
 			int moveSand = sand / 100;
 			map[prevr - dr[(d + 1) % 4]][prevc - dc[(d + 1) % 4]] += moveSand;
-			remain -= moveSand;
 		}
+		remain -= sand / 100;
 
 		if (check(frontr, frontc)) {
 			map[frontr][frontc] += remain;
@@ -152,7 +157,7 @@ public class Main {
 
 	}
 
-	//
+	// 전체 모래의 양을 구하는 메소드
 	public static int getTotalSand() {
 		int sum = 0;
 		for (int r = 1; r <= N; r++) {
