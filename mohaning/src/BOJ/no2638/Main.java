@@ -25,9 +25,7 @@ public class Main {
 	static boolean[][] visited;
 
 	// 모든 치즈가 녹아서 없어지는데 걸리는 시간 lastTime
-	// 마지막까지 남아있는 치즈 조각의 수 peice
 	static int lastTime = -1;
-	static int peice;
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
@@ -42,23 +40,61 @@ public class Main {
 			}
 		}
 
+		// 모든 치즈가 녹기 전까지 bfs 반복
+		// -> 두 변 이상이 실내온도의 공기와 접촉한 치즈 제거
+		boolean isAllMelted = false;
+		while (!isAllMelted) {
+			lastTime++;
+			visited = new boolean[N][M];
+			if (bfs() == 0) {
+				isAllMelted = true;
+			}
+		}
+
+		// 결과 출력
+		System.out.println(lastTime);
 	}
 
 	// bfs
-	public static void bfs() {
+	public static int bfs() {
 		Queue<int[]> queue = new LinkedList<>();
+		int count = 0;
 
+		// activated 배열 초기화 후 dfs 실시
+		// -> activated 배열에 정보 입력
 		activated = new boolean[N][M];
 		activated[0][0] = true;
 		dfs(0, 0);
 
+		// visited 배열 초기화 후 bfs 실시
+		visited[0][0] = true;
 		queue.add(new int[] { 0, 0 });
 		while (!queue.isEmpty()) {
 			int[] curr = queue.poll();
 			int r = curr[0];
 			int c = curr[1];
 
+			for (int d = 0; d < 4; d++) {
+				int nr = r + dr[d];
+				int nc = c + dc[d];
+
+				// 실내온도의 공기이면 방문체크 후 큐에 추가
+				if (check(nr, nc) && map[nr][nc] == 0 && activated[nr][nc] && !visited[nr][nc]) {
+					visited[nr][nc] = true;
+					queue.add(new int[] { nr, nc });
+				}
+
+				// 치즈이고 두 변 이상 실내온도의 공기와 접촉중이라면 방문 체크 후 map의 값 변경
+				if (check(nr, nc) && map[nr][nc] == 1 && isContacted(nr, nc)) {
+					visited[nr][nc] = true;
+					map[nr][nc] = 0;
+					count++;
+				}
+			}
 		}
+		// 녹은 치즈의 수 반환
+		// -> 모든 치즈가 녹았다면 0 반환(isAllMelted = true)
+		return count;
 	}
 
 	// dfs
@@ -69,6 +105,7 @@ public class Main {
 
 			if (check(nr, nc) && map[nr][nc] == 0 && !activated[nr][nc]) {
 				activated[nr][nc] = true;
+				dfs(nr, nc);
 			}
 		}
 	}
