@@ -23,6 +23,7 @@ public class Main {
 
 	}
 
+	// 가장 크게 배정된 지방의 예산액을 구하는 메소드
 	public static int getMax(int N, int[] needs, int budget) {
 		int sum = 0;
 		int max = 0;
@@ -37,22 +38,34 @@ public class Main {
 			return max;
 		}
 
+		// 모든 예산요청이 그대로 배정될 수 없는 경우
+		// 이분탐색을 활용해 최대값 계산
+
+		// 초기 설정
 		int left = 1;
 		int right = max;
 		int mid = (left + right) / 2;
 
+		// 하한이 상한보다 작거나 같을때까지 반복(하한이 상한을 넘어가면 종료)
 		while (left <= right) {
 			mid = (left + right) / 2;
 			sum = 0;
 
+			// 예산을 배정한 합계를 계산
 			for (int i = 0; i < N; i++) {
+				// 예산 요청이 상한액보다 작다면 예산 요청만큼만 배정
 				if (needs[i] < mid) {
 					sum += needs[i];
-				} else {
+				}
+				// 예산 요청이 상한액보다 크다면 상한액만큼만 배정
+				else {
 					sum += mid;
 				}
 			}
 
+			// 나누어준 예산 배정액이
+			// - 전체 예산보다 크다면 예산 상한액을 줄여서 반복
+			// - 전체 예산보다 작다면 예산 상한액을 줄여서 반복
 			if (sum > budget) {
 				right = mid - 1;
 			} else {
@@ -60,6 +73,7 @@ public class Main {
 			}
 		}
 
-		return mid - 1;
+		// 결과(최종 상한액) 반환
+		return left - 1;
 	}
 }
